@@ -1,0 +1,5 @@
+# Common entries are handled by the root .gitignore.
+# Add api-specific overrides below.
+
+# Uploaded files / local storage
+uploads/

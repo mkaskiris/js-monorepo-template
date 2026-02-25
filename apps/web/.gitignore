@@ -1,0 +1,5 @@
+# Common entries are handled by the root .gitignore.
+# Add web-specific overrides below.
+
+# Vite-generated type declarations
+vite.config.*.timestamp-*
