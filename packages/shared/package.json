@@ -1,5 +1,5 @@
 {
-  "name": "@alp/shared",
+  "name": "@app/shared",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,6 +12,9 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.25.67"
   },
   "keywords": [],
   "author": "",

@@ -12,6 +12,12 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
   },
 
   // React-specific rules for the web app
