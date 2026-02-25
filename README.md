@@ -1,4 +1,4 @@
-# Adult Learning Platform
+# JS MonoRepo Template
 
 A full-stack e-learning platform built as a pnpm monorepo.
 
