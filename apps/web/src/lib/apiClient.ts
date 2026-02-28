@@ -25,8 +25,9 @@ async function request<T>(path: string, options: ApiRequestInit = {}): Promise<T
 
   let res = await fetch(path, init)
 
-  // Silent token refresh on 401 (skip for the refresh endpoint itself)
-  if (res.status === 401 && path !== '/auth/refresh') {
+  // Silent token refresh on 401 (skip for auth endpoints that handle 401 themselves)
+  const skipRefreshPaths = ['/auth/refresh', '/auth/login', '/auth/register']
+  if (res.status === 401 && !skipRefreshPaths.includes(path)) {
     const refreshRes = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' })
     if (refreshRes.ok) {
       const data = (await refreshRes.json()) as { accessToken: string }

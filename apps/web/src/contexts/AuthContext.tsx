@@ -36,7 +36,12 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   }, [])
 
   const register = useCallback(async (data: RegisterInput) => {
-    await apiClient.post('/auth/register', data)
+    const res = await apiClient.post<{ accessToken: string; user: AuthUser }>(
+      '/auth/register',
+      data
+    )
+    setAccessToken(res.accessToken)
+    setUser(res.user)
   }, [])
 
   const logout = useCallback(async () => {

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { RegisterSchema } from '@app/shared'
 import { useAuth } from '../hooks/useAuth.ts'
 import { Button } from '@/components/ui/button'
@@ -17,12 +18,10 @@ import {
 export function RegisterPage() {
   const { register } = useAuth()
   const navigate = useNavigate()
-  const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setError(null)
     const form = new FormData(e.currentTarget)
     const data = {
       email: form.get('email') as string,
@@ -30,15 +29,15 @@ export function RegisterPage() {
     }
     const result = RegisterSchema.safeParse(data)
     if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input')
+      toast.error(result.error.issues[0]?.message ?? 'Invalid input')
       return
     }
     setIsPending(true)
     try {
       await register(result.data)
-      navigate('/login')
+      navigate('/')
     } catch (err) {
-      setError((err as Error).message)
+      toast.error((err as Error).message || 'Registration failed')
     } finally {
       setIsPending(false)
     }
@@ -76,11 +75,6 @@ export function RegisterPage() {
                 required
               />
             </div>
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
-            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isPending}>

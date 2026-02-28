@@ -57,7 +57,11 @@ export async function register(input: RegisterInput) {
     .returning(userColumns)
 
   if (!user) throw new Error('Failed to create user')
-  return user
+
+  const accessToken = generateAccessToken(user.id, user.role, user.email)
+  const refreshToken = await createRefreshToken(user.id)
+
+  return { accessToken, refreshToken, user }
 }
 
 export async function login(input: LoginInput) {

@@ -20,8 +20,9 @@ function setRefreshCookie(res: Response, token: string): void {
 
 // Express 5 automatically forwards thrown errors to the error handler
 export async function register(req: Request, res: Response): Promise<void> {
-  const user = await authService.register(req.body)
-  res.status(201).json({ user })
+  const { accessToken, refreshToken, user } = await authService.register(req.body)
+  setRefreshCookie(res, refreshToken)
+  res.status(201).json({ accessToken, user })
 }
 
 export async function login(req: Request, res: Response): Promise<void> {

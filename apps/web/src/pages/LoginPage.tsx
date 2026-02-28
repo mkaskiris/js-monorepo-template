@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { LoginSchema } from '@app/shared'
 import { useAuth } from '../hooks/useAuth.ts'
 import { Button } from '@/components/ui/button'
@@ -17,12 +18,10 @@ import {
 export function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setError(null)
     const form = new FormData(e.currentTarget)
     const data = {
       email: form.get('email') as string,
@@ -30,7 +29,7 @@ export function LoginPage() {
     }
     const result = LoginSchema.safeParse(data)
     if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input')
+      toast.error(result.error.issues[0]?.message ?? 'Invalid input')
       return
     }
     setIsPending(true)
@@ -38,7 +37,7 @@ export function LoginPage() {
       await login(result.data)
       navigate('/')
     } catch (err) {
-      setError((err as Error).message)
+      toast.error((err as Error).message || 'Invalid credentials')
     } finally {
       setIsPending(false)
     }
@@ -75,11 +74,6 @@ export function LoginPage() {
                 required
               />
             </div>
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
-            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isPending}>
